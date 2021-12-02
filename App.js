@@ -30,6 +30,10 @@ const MyStack = () => {
                     name="Answers"
                     component={AnswerScreen}
                 />
+                <Stack.Screen
+                    name="Game Over"
+                    component={EndScreen}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );
@@ -90,29 +94,52 @@ const QuestionsScreen = ({ navigation, route }) => {
 
 
 const RulesScreen = ({ navigation, route }) => {
-    return <Text>Instructions:</Text>;
+    return <Text>Instructions: To begin the game, press the Start Game button. A question will appear and will give you a list of possible answers. Select the option you think is correct. At the end of the game, you will see your score.</Text>;
 };
 
 const AnswerScreen = ({ navigation, route}) => {
-    var numberOn =  route.params.num
+    var numberOn = route.params.num
+    var endGame = route.params.endGame
     const question = route.params.totalQuestions.results[numberOn];
     const totalQuestions = route.params.totalQuestions
     numberOn += 1
     if (numberOn > 9) {
         numberOn = 0
+        endGame = true
     }
-    return (
-        <View>
-            <Text> { question.correct_answer } </Text>
-            <Button
-            color='#35327a'
-            title="Next Question"
-            onPress={() =>
-                navigation.navigate("Questions", { allQuestions: totalQuestions, num: numberOn} )
-            }
-        />
-        </View>
-    );
+
+    if (endGame === true) {
+        return (
+            <View>
+                <Text> {question.correct_answer} </Text>
+                <Button
+                    color='#35327a'
+                    title="Next Question"
+                    onPress={() =>
+                        navigation.navigate("Game Over", { allQuestions: totalQuestions, num: numberOn })
+                    }
+                />
+            </View>
+        );
+    }
+    else {
+        return (
+            <View>
+                <Text> {question.correct_answer} </Text>
+                <Button
+                    color='#35327a'
+                    title="Next Question"
+                    onPress={() =>
+                        navigation.navigate("Questions", { allQuestions: totalQuestions, num: numberOn })
+                    }
+                />
+            </View>
+        );
+    }
+};
+
+const EndScreen = ({ navigation, route }) => {
+    return <Text> You won! </Text>;
 };
 
 
